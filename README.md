@@ -7,8 +7,8 @@ This script uses Hammerspoon to detect system events such as power off, sleep, a
 ## Requirements
 
 - [Hammerspoon](https://www.hammerspoon.org/)
-- Python 3
-- [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote) (version 2023-01-27 or newer)
+- Python 3.11
+- [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote) (version 2023-12-11 or newer)
 
 ### Installing Requirements
 
@@ -24,14 +24,21 @@ brew install --cask hammerspoon
 
 ```sh
 # You can skip this if you already have Python installed and know what you're doing.
-brew install python
+brew install python@3.11
+pip install pipx
 
-# Then install LGWebRemote (version 2023-01-27 or newer)...
-mkdir -p ~/opt
-python -m venv ~/opt/lgtv
-cd ~/opt/lgtv
-source bin/activate
-pip install git+https://github.com/klattimer/LGWebOSRemote
+# Then install LGWebRemote...
+pipx install git+https://github.com/klattimer/LGWebOSRemote.git
+pipx ensurepath
+```
+
+#### Removing old versions of LGWebOSRemote
+
+If you had previously installed LGWebOSRemote with pip (rather than pipx),
+you can remove the old version by running:
+
+```
+rm -fr ~/opt/lgtv
 ```
 
 ### Configuring LGWebOSRemote
@@ -45,7 +52,7 @@ lgtv scan ssl
 and see some info about your TV. Grab your TV's IP address from the output. Then:
 
 ```sh
-lgtv auth <ip_address_here> MyTV ssl
+lgtv auth <ip_address_here> MyTV --ssl
 ```
 
 and follow the instructions on your TV.
@@ -53,8 +60,8 @@ and follow the instructions on your TV.
 Now, try the following:
 
 ```sh
-lgtv MyTV swInfo ssl
-lgtv MyTV screenOff ssl
+lgtv --name MyTV --ssl swInfo
+lgtv --name MyTV --ssl screenOff
 ```
 
 If everything is working as expected, your screen should turn off.

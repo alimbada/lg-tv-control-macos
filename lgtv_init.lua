@@ -12,7 +12,7 @@ local tv_name = "MyTV" -- Name of your TV, set when you run `lgtv auth`
 local connected_tv_identifiers = {"LG TV", "LG TV SSCR2"} -- Used to identify the TV when it's connected to this computer
 local screen_off_command = "off" -- use "screenOff" to keep the TV on, but turn off the screen.
 local lgtv_path = "~/opt/lgtv/bin/lgtv" -- Full path to lgtv executable
-local lgtv_cmd = lgtv_path.." "..tv_name
+local lgtv_cmd = lgtv_path.." --name "..tv_name
 local app_id = "com.webos.app."..tv_input:lower():gsub("_", "")
 local lgtv_ssl = true -- Required for firmware 03.30.16 and up. Also requires LGWebOSRemote version 2023-01-27 or newer.
 
@@ -74,15 +74,8 @@ end
 
 function exec_command(command)
   if lgtv_ssl then
-    space_loc = command:find(" ")
-
-    --- "ssl" must be the first argument for commands like 'startApp'. Advance it to the expected position.
-    if space_loc then
-      command = command:sub(1,space_loc).."ssl "..command:sub(space_loc+1)
-    else
-      command = command.." ssl"
-    end
-  end
+    command = command.." --ssl"
+      end
 
   command = lgtv_cmd.." "..command
   log_d("Executing command: "..command)

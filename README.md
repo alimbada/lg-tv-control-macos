@@ -1,84 +1,42 @@
 # LG TV Control for macOS
 
+> **IMPORTANT NOTICE:** It is advised to remain on webOS 23 while we determine if webOS 24 is fully compatible. If you upgrade, you cannot roll back, so it's better to hold back for now!
+
 Automatically wake/sleep and change the input of your LG TV when used as a monitor on macOS.
 
 This script uses Hammerspoon to detect system events such as power off, sleep, and wake.
 
-## Requirements
+It makes use of [`bscpylgtv`](https://github.com/chros73/bscpylgtv) to control the TV set. It is included in this repository for Apple Silicon but can easily be compiled for Intel if desired.
 
-- [Hammerspoon](https://www.hammerspoon.org/)
-- Python 3.11
-- [LGWebOSRemote](https://github.com/klattimer/LGWebOSRemote) (version 2023-12-11 or newer)
+## Pro Tips
 
-### Installing Requirements
+- For the best result, make sure you configure your TV for PC use. [This video](https://youtu.be/zv-2yP7Rumo?si=vlrtGhWwUl8aSjnt) is a great place to start.
+- Make sure Wake on LAN is enabled in your TV settings. Settings > Support > IP Control Settings > Wake on LAN = ENABLED.
 
-This assumes that you already have [Homebrew](https://brew.sh) installed. If you don't, get it first.
+## Pre-installation Requirements
 
-## Installing Hammerspoon
+- [Homebrew](https://brew.sh/)
 
-```sh
-brew install --cask hammerspoon
+## Installation
+
+Use the installation script for a simple and convenient installation process.
+
+Before proceeding, make sure you have [Homebrew](https://brew.sh) installed.
+
+Run the following commands in Terminal:
+
+```bash
+cd /tmp
+git clone https://github.com/cmer/lg-tv-control-macos.git
+cd lg-tv-control-macos
+./install.sh
 ```
 
-### Installing Python & LGWebOSRemote
+### Configuration
+Change the HDMI input at the top of `~/.hammerspoon/lgtv.lua` script, if needed. Optionally, set `debug` to `true` if you are running into issues.
 
-```sh
-# You can skip this if you already have Python installed and know what you're doing.
-brew install python@3.11
-pip install pipx
 
-# Then install LGWebRemote...
-pipx install git+https://github.com/klattimer/LGWebOSRemote.git
-pipx ensurepath
-```
+## Legacy version using LGWebOSRemote
 
-#### Removing old versions of LGWebOSRemote
+This new and updated version no longer uses LGWebOSRemote, and does not require installing Python. It is therefore much easier to get going. 🎉
 
-If you had previously installed LGWebOSRemote with pip (rather than pipx),
-you can remove the old version by running:
-
-```
-rm -fr ~/opt/lgtv
-```
-
-### Configuring LGWebOSRemote
-
-By now, you should be able to run
-
-```sh
-lgtv scan ssl
-```
-
-and see some info about your TV. Grab your TV's IP address from the output. Then:
-
-```sh
-lgtv auth <ip_address_here> MyTV --ssl
-```
-
-and follow the instructions on your TV.
-
-Now, try the following:
-
-```sh
-lgtv --name MyTV --ssl swInfo
-lgtv --name MyTV --ssl screenOff
-```
-
-If everything is working as expected, your screen should turn off.
-
-## Installing the Hammerspoon script
-
-1. Copy `lgtv_init.lua`from this repo to `~/.hammerspoon`
-2. Run the following
-
-```sh
-mkdir -p ~/.hammerspoon
-touch ~/.hammerspoon/init.lua
-echo "require \"lgtv_init\"" >> ~/.hammerspoon/init.lua
-```
-
-3. Change the HDMI input at the top of the Lua script, if needed.
-
-## Special Thanks
-
-Thanks to [@greyshi](https://github.com/greyshi) for extending upon my [initial Wake On LAN gist](https://gist.github.com/cmer/bd40d9da0055d257c5aab2e0143ee17b) and introducing LGWebOSRemote.
